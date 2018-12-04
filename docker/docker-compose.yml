@@ -11,7 +11,7 @@ services:
     networks:
       - architectchallenge
     environment:
-      INFLUXDB_DB: sensor-events
+      INFLUXDB_DB: appmetrics
       INFLUXDB_USER: influxUser
       INFLUXDB_USER_PASSWORD: influxPwd
 
