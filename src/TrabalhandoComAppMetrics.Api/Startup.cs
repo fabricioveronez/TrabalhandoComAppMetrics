@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using App.Metrics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +26,13 @@ namespace TrabalhandoComAppMetrics.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IMetricsRoot metrics = AppMetrics.CreateDefaultBuilder().Build();
+
+            services.AddMetrics(metrics);
+            services.AddMetricsTrackingMiddleware();            
+
+            services.AddMvc().AddMetrics();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -40,6 +48,7 @@ namespace TrabalhandoComAppMetrics.Api
                 app.UseHsts();
             }
 
+            app.UseMetricsAllMiddleware();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
