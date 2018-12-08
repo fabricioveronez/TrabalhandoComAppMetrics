@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using App.Metrics;
-using App.Metrics.AspNetCore;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,19 +19,6 @@ namespace TrabalhandoComAppMetrics.Api
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-            .ConfigureMetricsWithDefaults(
-                builder =>
-                {
-                    builder.Report.ToInfluxDb(options =>
-                    {
-                        options.InfluxDb.BaseUri = new System.Uri("http://localhost:8086");
-                        options.InfluxDb.Database = "appmetrics";
-                        options.InfluxDb.CreateDataBaseIfNotExists = true;
-                        options.InfluxDb.UserName = "influxUser";
-                        options.InfluxDb.Password = "influxPwd";
-                    });                 
-                })
-            .UseMetrics()
-            .UseStartup<Startup>();   
+                .UseStartup<Startup>();
     }
 }
