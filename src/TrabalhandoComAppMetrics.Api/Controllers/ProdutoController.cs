@@ -10,20 +10,18 @@ namespace TrabalhandoComAppMetrics.Api.Controllers
     [Route("api/[controller]")]
     public class ProdutoController : Controller
     {
-        public ProdutoController() { }
-
         // GET api/produtos
         [HttpGet("")]
-        public ActionResult<IEnumerable<Produto>> Gets()
+        public ActionResult<IEnumerable<Produto>> Get()
         {
-            return new List<Produto>() { new Produto() { Nome = "Fabricio", SobreNome = "Veronez", Idade = 34 }, new Produto() { Nome = "Fulano", SobreNome = "da Silva", Idade = 29 } };
+            return new List<Produto>() { new Produto() { Nome = "Geladeira", Descricao = "Uma geladeira muito eficiente." }, new Produto() { Nome = "Microondas", Descricao = "Esse Microondas é muito bom." } };
         }
 
         // GET api/produtos/5
         [HttpGet("{id}")]
         public ActionResult<Produto> GetById(int id)
         {
-            return new Produto() { Nome = "Fabricio", SobreNome = "Veronez", Idade = 34 };
+            return new Produto() { Nome = "Geladeira", Descricao = "Uma geladeira muito eficiente." };
         }
 
         // POST api/produtos
