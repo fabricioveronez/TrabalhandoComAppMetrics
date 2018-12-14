@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using App.Metrics.Health.Extensions.Hosting;
 
 namespace TrabalhandoComAppMetrics.Api
 {
@@ -26,7 +25,7 @@ namespace TrabalhandoComAppMetrics.Api
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {                         
             var metrics = new MetricsBuilder()
                                 .Report.ToInfluxDb(options =>
                                 {
@@ -35,18 +34,26 @@ namespace TrabalhandoComAppMetrics.Api
                                     options.InfluxDb.UserName = "influxUser";
                                     options.InfluxDb.Password = "influxPwd";
                                 })
+                                .Report.ToConsole()
                                 .Build();
 
             services.AddMetrics(metrics);
+
+            // ASP.NET CORE 2.1
             services.AddMetricsReportingHostedService();
+
+            // ASP.NET CORE 2.0
+            //services.AddMetricsReportScheduler();
+
             services.AddMetricsTrackingMiddleware();
 
             services.AddMvc().AddMetrics();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+       public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -54,11 +61,12 @@ namespace TrabalhandoComAppMetrics.Api
             }
             else
             {
-                // app.UseHsts();
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();  
             }
-
+            
             app.UseMetricsAllMiddleware();
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
